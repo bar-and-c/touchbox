@@ -34,6 +34,7 @@ namespace TouchBox
 
         private void KeyboardGrid_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
+            System.Diagnostics.Debug.WriteLine("{0} - PointerPressed", DateTime.Now.ToString("hh:mm:ss.fff"));
             FrameworkElement feSource = e.OriginalSource as FrameworkElement;
             string keyName = feSource.Name;
             int midiNote = -1;
@@ -76,20 +77,20 @@ namespace TouchBox
         }
 
         private Dictionary<string, int> _noteNumbers = new Dictionary<string, int>() 
-                {
-                 {"C",48},
-                 {"Ciss",49},
-                 {"D",50},
-                 {"Diss",51},
-                 {"E",52},
-                 {"F",53},
-                 {"Fiss",54},
-                 {"G",55},
-                 {"Giss",56},
-                 {"A",57},
-                 {"Aiss",58},
-                 {"B",59},
-                };
+        {
+            {"C",36},
+            {"Ciss",37},
+            {"D",38},
+            {"Diss",39},
+            {"E",40},
+            {"F",41},
+            {"Fiss",42},
+            {"G",43},
+            {"Giss",44},
+            {"A",45},
+            {"Aiss",46},
+            {"B",47},
+        };
 
         private int GetLowestKeyFromName(string keyName)
         {
@@ -111,6 +112,12 @@ namespace TouchBox
             {
                 _synth.NoteOff(midiNote);
             }
+        }
+
+        private void DrumGrid_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("{0} - DrumGrid_PointerPressed", DateTime.Now.ToString("hh:mm:ss.fff"));
+
         }
     }
 }

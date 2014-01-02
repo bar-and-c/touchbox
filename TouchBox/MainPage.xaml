@@ -159,7 +159,7 @@
                 <Rectangle x:Name="B3" Grid.Row="1" Grid.Column="40" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
                 <Rectangle x:Name="C4" Grid.Row="1" Grid.Column="42" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
             </Grid>
-            <Grid x:Name="DrumGrid" Row="2" Column="3" Margin="2" >
+            <Grid x:Name="DrumGrid" Row="2" Column="3" Margin="2" PointerPressed="DrumGrid_PointerPressed" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
