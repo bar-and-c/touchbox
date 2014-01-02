@@ -1,0 +1,201 @@
+﻿<Page
+    x:Class="TouchBox.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TouchBox"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid x:Name="MainGrid"  Margin="5">
+
+            <Grid.Resources>
+                <Style TargetType="Rectangle" x:Key="ButtonStyle">
+                    <Setter Property="Rectangle.Stroke" Value="DarkSlateGray" />
+                </Style>
+
+                <Style TargetType="Rectangle" x:Key="DrumButtonStyle" BasedOn="{StaticResource ButtonStyle}">
+                    <Setter Property="Rectangle.Fill" Value="DarkGray"/>
+                    <Setter Property="Rectangle.RadiusX" Value="6"/>
+                    <Setter Property="Rectangle.RadiusY" Value="6"/>
+                    <Setter Property="Rectangle.Margin" Value="2"/>
+                </Style>
+
+                <Style TargetType="Rectangle" x:Key="PianoWhiteKeyStyle" BasedOn="{StaticResource ButtonStyle}">
+                    <Setter Property="Rectangle.Fill" Value="WhiteSmoke"/>
+                    <Setter Property="Rectangle.RadiusX" Value="2"/>
+                    <Setter Property="Rectangle.RadiusY" Value="2"/>
+                    <Setter Property="Rectangle.Margin" Value="3,1,3,1"/>
+                </Style>
+
+                <Style TargetType="Rectangle" x:Key="PianoBlackKeyStyle" BasedOn="{StaticResource ButtonStyle}">
+                    <Setter Property="Rectangle.Fill" Value="Black"/>
+                    <Setter Property="Rectangle.RadiusX" Value="2"/>
+                    <Setter Property="Rectangle.RadiusY" Value="2"/>
+                    <Setter Property="Rectangle.Margin" Value="6,1,6,1"/>
+                </Style>
+
+            </Grid.Resources>
+
+            <!--
+        TODO: 
+        I had a DataGrid in mind for the drum pad matrix, but a DataGrid displays a list of "rows". 
+        It seems like a matrix of equal buttons is a bad fit for that model. 
+        For now, maybe set up the buttons manually in XAML, with some sort of template (or whatever 
+        it's called) in XAML to control the button look?
+        
+        Things to add to grid: 
+        - Kaoss pad? 
+        - Mixer.
+        - Very simple sequencer.
+        - Some way to change/edit sounds and sequences, perhaps? 
+        -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid x:Name="KeyboardGrid" Row="2" Column="0" ColumnSpan="3" PointerPressed="KeyboardGrid_PointerPressed" PointerReleased="KeyboardGrid_PointerReleased">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <!-- Black keys -->
+                <Rectangle x:Name="Ciss1" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Style="{StaticResource PianoBlackKeyStyle}"/>
+                <Rectangle x:Name="Diss1" Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="2" Style="{StaticResource PianoBlackKeyStyle}"/>
+                <Rectangle x:Name="Fiss1" Grid.Row="0" Grid.Column="7" Grid.ColumnSpan="2" Style="{StaticResource PianoBlackKeyStyle}"/>
+                <Rectangle x:Name="Giss1" Grid.Row="0" Grid.Column="9" Grid.ColumnSpan="2" Style="{StaticResource PianoBlackKeyStyle}"/>
+                <Rectangle x:Name="Aiss1" Grid.Row="0" Grid.Column="11" Grid.ColumnSpan="2" Style="{StaticResource PianoBlackKeyStyle}"/>
+                <Rectangle x:Name="Ciss2" Grid.Row="0" Grid.Column="15" Grid.ColumnSpan="2" Style="{StaticResource PianoBlackKeyStyle}"/>
+                <Rectangle x:Name="Diss2" Grid.Row="0" Grid.Column="17" Grid.ColumnSpan="2" Style="{StaticResource PianoBlackKeyStyle}"/>
+                <Rectangle x:Name="Fiss2" Grid.Row="0" Grid.Column="21" Grid.ColumnSpan="2" Style="{StaticResource PianoBlackKeyStyle}"/>
+                <Rectangle x:Name="Giss2" Grid.Row="0" Grid.Column="23" Grid.ColumnSpan="2" Style="{StaticResource PianoBlackKeyStyle}"/>
+                <Rectangle x:Name="Aiss2" Grid.Row="0" Grid.Column="25" Grid.ColumnSpan="2" Style="{StaticResource PianoBlackKeyStyle}"/>
+
+                <Rectangle x:Name="Ciss3" Grid.Row="0" Grid.Column="29" Grid.ColumnSpan="2" Style="{StaticResource PianoBlackKeyStyle}"/>
+                <Rectangle x:Name="Diss3" Grid.Row="0" Grid.Column="31" Grid.ColumnSpan="2" Style="{StaticResource PianoBlackKeyStyle}"/>
+                <Rectangle x:Name="Fiss3" Grid.Row="0" Grid.Column="35" Grid.ColumnSpan="2" Style="{StaticResource PianoBlackKeyStyle}"/>
+                <Rectangle x:Name="Giss3" Grid.Row="0" Grid.Column="37" Grid.ColumnSpan="2" Style="{StaticResource PianoBlackKeyStyle}"/>
+                <Rectangle x:Name="Aiss3" Grid.Row="0" Grid.Column="39" Grid.ColumnSpan="2" Style="{StaticResource PianoBlackKeyStyle}"/>
+
+                <!-- White keys -->
+                <Rectangle x:Name="C1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
+                <Rectangle x:Name="D1" Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
+                <Rectangle x:Name="E1" Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
+                <Rectangle x:Name="F1" Grid.Row="1" Grid.Column="6" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
+                <Rectangle x:Name="G1" Grid.Row="1" Grid.Column="8" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
+                <Rectangle x:Name="A1" Grid.Row="1" Grid.Column="10" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
+                <Rectangle x:Name="B1" Grid.Row="1" Grid.Column="12" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
+                <Rectangle x:Name="C2" Grid.Row="1" Grid.Column="14" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
+                <Rectangle x:Name="D2" Grid.Row="1" Grid.Column="16" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
+                <Rectangle x:Name="E2" Grid.Row="1" Grid.Column="18" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
+                <Rectangle x:Name="F2" Grid.Row="1" Grid.Column="20" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
+                <Rectangle x:Name="G2" Grid.Row="1" Grid.Column="22" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
+                <Rectangle x:Name="A2" Grid.Row="1" Grid.Column="24" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
+                <Rectangle x:Name="B2" Grid.Row="1" Grid.Column="26" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
+                <Rectangle x:Name="C3" Grid.Row="1" Grid.Column="28" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
+
+                <Rectangle x:Name="D3" Grid.Row="1" Grid.Column="30" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
+                <Rectangle x:Name="E3" Grid.Row="1" Grid.Column="32" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
+                <Rectangle x:Name="F3" Grid.Row="1" Grid.Column="34" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
+                <Rectangle x:Name="G3" Grid.Row="1" Grid.Column="36" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
+                <Rectangle x:Name="A3" Grid.Row="1" Grid.Column="38" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
+                <Rectangle x:Name="B3" Grid.Row="1" Grid.Column="40" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
+                <Rectangle x:Name="C4" Grid.Row="1" Grid.Column="42" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
+            </Grid>
+            <Grid x:Name="DrumGrid" Row="2" Column="3" Margin="2" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Rectangle Grid.Row="0" Grid.Column="0" Style="{StaticResource DrumButtonStyle}" />
+                <Rectangle Grid.Row="0" Grid.Column="1" Style="{StaticResource DrumButtonStyle}" />
+                <Rectangle Grid.Row="0" Grid.Column="2" Style="{StaticResource DrumButtonStyle}" />
+                <Rectangle Grid.Row="0" Grid.Column="3" Style="{StaticResource DrumButtonStyle}" />
+                <Rectangle Grid.Row="1" Grid.Column="0" Style="{StaticResource DrumButtonStyle}" />
+                <Rectangle Grid.Row="1" Grid.Column="1" Style="{StaticResource DrumButtonStyle}" />
+                <Rectangle Grid.Row="1" Grid.Column="2" Style="{StaticResource DrumButtonStyle}" />
+                <Rectangle Grid.Row="1" Grid.Column="3" Style="{StaticResource DrumButtonStyle}" />
+                <Rectangle Grid.Row="2" Grid.Column="0" Style="{StaticResource DrumButtonStyle}" />
+                <Rectangle Grid.Row="2" Grid.Column="1" Style="{StaticResource DrumButtonStyle}" />
+                <Rectangle Grid.Row="2" Grid.Column="2" Style="{StaticResource DrumButtonStyle}" />
+                <Rectangle Grid.Row="2" Grid.Column="3" Style="{StaticResource DrumButtonStyle}" />
+                <Rectangle Grid.Row="3" Grid.Column="0" Style="{StaticResource DrumButtonStyle}" />
+                <Rectangle x:Name="pad2_1" Grid.Row="3" Grid.Column="1" Style="{StaticResource DrumButtonStyle}"  />
+                <Rectangle Grid.Row="3" Grid.Column="2" Style="{StaticResource DrumButtonStyle}" />
+                <Rectangle Grid.Row="3" Grid.Column="3" Style="{StaticResource DrumButtonStyle}"  />
+
+                <!-- Maybe use rectangles *for now*, and if I need buttons later, figure out how to 
+            set its content to a rectangle. Also how to make that rectangle change when touched. Templates? 
+            <Button Grid.Row="3" Grid.Column="2" Content="Rectan..."  Style="{StaticResource DrumButtonStyle}" />
+-->
+
+            </Grid>
+        </Grid>
+
+    </Grid>
+</Page>
