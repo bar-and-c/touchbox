@@ -48,7 +48,7 @@ namespace Additive101
             _sampleMixer = new MixingSampleProvider(_voices[0].SampleProviders);
             _sampleToWaveProvider = new SampleToWaveProvider(_sampleMixer);
 
-            _waveOut = new WasapiOutRT(AudioClientShareMode.Shared, 100);
+            _waveOut = new WasapiOutRT(AudioClientShareMode.Shared, 10);
             //            _waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback());
 
             await _waveOut.Init(_sampleToWaveProvider);

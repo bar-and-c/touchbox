@@ -18,7 +18,7 @@ namespace Additive101
 
 #if USE_WAVEFORM_LOOKUP_TABLE
         // See http://stackoverflow.com/questions/13466623/how-to-look-up-sine-of-different-frequencies-from-a-fixed-sized-lookup-table
-        private static int _tableSize = 41000;
+        private static int _tableSize = 48000;
         private static float[] _sineLookupTable;
         static HarmonicPartial()
         {
@@ -37,6 +37,7 @@ namespace Additive101
 
 
         public HarmonicPartial(int partial, float attack, float decay, float sustain, float release)
+            : base(48000, 1) // TODO: This sets the sample rate, which should be what the sound card provides, but HOW to know that? 
         {
             _partialNumber = partial;
             _envelopeGenerator = new EnvelopeGenerator() 
