@@ -36,6 +36,11 @@ namespace Additive101
 #endif // USE_WAVEFORM_LOOKUP_TABLE 
 
 
+        /* TODO: THis is what the author says about getting sample rate: 
+         * With WasapiOut at least I think you can get it just by asking for the WaveFormat before you call Init.
+         * (It's been a while, but I think that's how it works from memory). By the way, best to ask NAudio questions
+         * over at the CodePlex discussion site if possible (naudio.codeplex.com) 
+         */
         public HarmonicPartial(int partial, float attack, float decay, float sustain, float release)
             : base(48000, 1) // TODO: This sets the sample rate, which should be what the sound card provides, but HOW to know that? 
         {
