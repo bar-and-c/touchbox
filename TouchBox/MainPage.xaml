@@ -55,14 +55,12 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
-                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
-                <RowDefinition/>
             </Grid.RowDefinitions>
-            <Grid x:Name="KeyboardGrid" Row="2" Column="0" ColumnSpan="3" PointerPressed="KeyboardGrid_PointerPressed" PointerReleased="KeyboardGrid_PointerReleased" PointerExited="KeyboardGrid_PointerReleased" PointerMoved="KeyboardGrid_PointerMoved">
+            <Grid x:Name="KeyboardGrid" Row="1" Column="0" ColumnSpan="3" PointerPressed="KeyboardGrid_PointerPressed" PointerReleased="KeyboardGrid_PointerReleased" PointerExited="KeyboardGrid_PointerReleased" PointerMoved="KeyboardGrid_PointerMoved">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
@@ -159,7 +157,7 @@
                 <Rectangle x:Name="B3" Grid.Row="1" Grid.Column="40" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
                 <Rectangle x:Name="C4" Grid.Row="1" Grid.Column="42" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
             </Grid>
-            <Grid x:Name="DrumGrid" Row="2" Column="3" Margin="2" PointerPressed="DrumGrid_PointerPressed" >
+            <Grid x:Name="DrumGrid" Row="0" Column="2" Margin="2" PointerPressed="DrumGrid_PointerPressed" >
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
