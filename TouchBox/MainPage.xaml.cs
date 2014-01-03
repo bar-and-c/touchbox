@@ -29,7 +29,19 @@ namespace TouchBox
         {
             this.InitializeComponent();
 
+            Loaded += MainPage_Loaded;
+            Unloaded += MainPage_Unloaded;
+        }
+
+
+        void MainPage_Loaded(object sender, RoutedEventArgs e)
+        {
             _synth = new Synthesizer();
+        }
+
+        void MainPage_Unloaded(object sender, RoutedEventArgs e)
+        {
+            _synth.Close();
         }
 
         private void KeyboardGrid_PointerPressed(object sender, PointerRoutedEventArgs e)
@@ -43,23 +55,12 @@ namespace TouchBox
                 midiNote = GetMidiNoteFromName(keyName, midiNote);
             }
             catch (Exception) { /* Not a key*/ }
+
             if (midiNote != -1)
             {
-                _synth.NoteOn(midiNote, 100);
+                float pressure = e.GetCurrentPoint(feSource).Properties.Pressure;
+                _synth.NoteOn(midiNote, (int) (pressure*127));
             }
-
-#if apa
-            switch (feSource.Name)
-            {
-                case "Ciss1":
-                    _synth.NoteOn(49, 100);
-                    break;
-                case "secondTextBlock":
-                    break;
-                case "thirdTextBlock":
-                    break;
-            }
-#endif
         }
 
         private int GetMidiNoteFromName(string keyName, int midiNote)
@@ -118,6 +119,26 @@ namespace TouchBox
         {
             System.Diagnostics.Debug.WriteLine("{0} - DrumGrid_PointerPressed", DateTime.Now.ToString("hh:mm:ss.fff"));
 
+        }
+
+        private void KeyboardGrid_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            FrameworkElement feSource = e.OriginalSource as FrameworkElement;
+            string keyName = feSource.Name;
+            int midiNote = -1;
+            try
+            {
+                midiNote = GetMidiNoteFromName(keyName, midiNote);
+            }
+            catch (Exception) { /* Not a key*/ }
+            if (midiNote != -1)
+            {
+                float pressure = e.GetCurrentPoint(feSource).Properties.Pressure;
+                pressure = (pressure - 0.54f) * 2;
+                pressure = Math.Min(1, pressure);
+                pressure = Math.Max(0, pressure);
+                _synth.Modulate(midiNote, pressure);
+            }
         }
     }
 }

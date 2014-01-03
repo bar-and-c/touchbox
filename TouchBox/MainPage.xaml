@@ -62,7 +62,7 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Grid x:Name="KeyboardGrid" Row="2" Column="0" ColumnSpan="3" PointerPressed="KeyboardGrid_PointerPressed" PointerReleased="KeyboardGrid_PointerReleased">
+            <Grid x:Name="KeyboardGrid" Row="2" Column="0" ColumnSpan="3" PointerPressed="KeyboardGrid_PointerPressed" PointerReleased="KeyboardGrid_PointerReleased" PointerExited="KeyboardGrid_PointerReleased" PointerMoved="KeyboardGrid_PointerMoved">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>

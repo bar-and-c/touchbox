@@ -147,5 +147,20 @@ namespace Additive101
             return 0;
         }
 #endif
+
+        internal void Modulate(float pressure)
+        {
+            // TODO: Hard to find some decent modulation strategy. For now I just push up those partails that are not in a square. 
+            _partials[1].ModulationAmplitude = pressure;
+            _partials[3].ModulationAmplitude = pressure * 2;
+            _partials[5].ModulationAmplitude = pressure * 3;
+            /*
+            for (int i = 0; i < _numberOfPartials; i++)
+            {
+                _partials[i].ModulationAmplitude = pressure * i;
+                System.Diagnostics.Debug.WriteLine("SynthesizerVoice.Modulate(partial[{0}].Mod: {1})", i, _partials[i].ModulationAmplitude);
+            }
+             * */
+        }
     }
 }

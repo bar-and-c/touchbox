@@ -51,6 +51,8 @@ namespace Additive101
 
             Frequency = 200;
             BaseAmplitude = 0.3f;
+
+            ModulationAmplitude = 0; // TODO: How the hell to work this shit? What should it be, how should it be reset. Bleh.
         }
 
         private float _frequency;
@@ -75,6 +77,8 @@ namespace Additive101
         public float BaseAmplitude { get; set; }
 
         public float RelativeAmplitude { get; set; }
+
+        public float ModulationAmplitude { get; set; }
 
 
         private bool _gate;
@@ -158,8 +162,13 @@ namespace Additive101
                 }
 
 #endif // USE_WAVEFORM_LOOKUP_TABLE
-
-                float totalAmplitude = RelativeAmplitude * BaseAmplitude * _envelopeGenerator.GetOutput();
+                float addedAmplitude = (ModulationAmplitude + RelativeAmplitude * (1 - ModulationAmplitude));
+                float totalAmplitude = addedAmplitude * BaseAmplitude * _envelopeGenerator.GetOutput();
+                if (_gate && (_partialNumber == 3) && (n == 0))
+                {
+                    System.Diagnostics.Debug.WriteLine("HarmonicPartial: Extra: {0}, total amplitude: {1}, mod: {2}, rel: {3}, rel*(1-mod): {4}",
+                        addedAmplitude, totalAmplitude, ModulationAmplitude, RelativeAmplitude, RelativeAmplitude * (1 - ModulationAmplitude));
+                }
                 buffer[n + offset] = totalAmplitude * sineValue;
 
 
@@ -179,6 +188,7 @@ namespace Additive101
             }
             return sampleCount;
         }
+
 
     }
 }
