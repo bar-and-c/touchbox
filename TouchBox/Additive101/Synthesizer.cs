@@ -13,10 +13,11 @@ namespace Additive101
     class Synthesizer
     {
         private List<SynthesizerVoice> _voices;
-        private const int _numberOfVoices = 1; // TODO: Figure out a good way for polyphony later. 
+        private const int _numberOfVoices = 10; // TODO: Figure out a good way for polyphony later. 
 
         // TODO: Is it necessary to keep track of active voices? With one voice per key (or just one), maybe not, but in the long run I think so.
-        private Dictionary<int, SynthesizerVoice> _activeVoices;
+        private List<SynthesizerVoice> _activeVoices;
+        private List<SynthesizerVoice> _availableVoices;
         private Object _lock;
 
         private MixingSampleProvider _sampleMixer;
@@ -31,13 +32,16 @@ namespace Additive101
         public Synthesizer()
         {
             _voices = new List<SynthesizerVoice>(_numberOfVoices);
+            _activeVoices = new List<SynthesizerVoice>();
+            _availableVoices = new List<SynthesizerVoice>();
             for (int i = 0; i < _numberOfVoices; i++)
             {
-                _voices.Add(new SynthesizerVoice());
+                SynthesizerVoice voice = new SynthesizerVoice();
+                _voices.Add(voice);
+                _availableVoices.Add(voice);
                 // TODO: In a system with patches, the voices must be initialized as well. For now I hard code the timbre elsewhere.
             }
 
-            _activeVoices = new Dictionary<int, SynthesizerVoice>();
             _lock = new Object();
 
             InitializeNAudio();
@@ -79,7 +83,7 @@ namespace Additive101
             {
                 SynthesizerVoice availableVoice = GetAvailableVoice();
                 availableVoice.NoteOn(frequency, amplitude);
-                _activeVoices[keyNote] = availableVoice;
+                availableVoice.KeyNumber = keyNote;
             }
         }
 
@@ -87,13 +91,44 @@ namespace Additive101
         {
             lock (_lock)
             {
-                if (_activeVoices.ContainsKey(keyNote)) // Otherwise it could've been kicked out by "too many fingers", lack of polyphony
+                SynthesizerVoice voice = GetActiveVoiceWithKey(keyNote);
+                if (voice != null) // Otherwise it could've been kicked out by "too many fingers", lack of polyphony
                 {
-                    SynthesizerVoice availableVoice = _activeVoices[keyNote];
-                    availableVoice.NoteOff();
-                    _activeVoices.Remove(keyNote);
+                    voice.NoteOff();
+                    ReleaseActiveVoice(voice);
                 }
             }
+        }
+
+        private void ReleaseActiveVoice(SynthesizerVoice voice)
+        {
+            lock (_lock)
+            {
+                if (_activeVoices.Contains(voice))
+                {
+                    _activeVoices.Remove(voice);
+                    voice.NoteOff();
+                    _availableVoices.Add(voice); // Put it last in the available list
+                }
+            }
+        }
+
+        private SynthesizerVoice GetActiveVoiceWithKey(int keyNote)
+        {
+            SynthesizerVoice voice = null;
+            lock (_lock)
+            {
+                foreach (SynthesizerVoice v in _activeVoices)
+                {
+                    if (v.KeyNumber == keyNote)
+                    {
+                        voice = v;
+                        break;
+                    }
+                }
+            }
+
+            return voice;
         }
 
         // void Aftertouch()
@@ -102,8 +137,26 @@ namespace Additive101
 
         private SynthesizerVoice GetAvailableVoice()
         {
-            // TODO: When more than one voice, remove the unlucky voice form _activeVoices
-            return _voices[0];
+            SynthesizerVoice voice = null;
+            lock (_lock)
+            {
+                if (_availableVoices.Count > 0)
+                {
+                    voice = _availableVoices[0];
+                    _availableVoices.Remove(voice);
+                    _activeVoices.Add(voice);
+                }
+                else
+                {
+                    // Get the first active voice, it's been in the list the longest
+                    voice = _activeVoices[0];
+                    _activeVoices.Remove(voice);
+                    voice.NoteOff();
+                    _activeVoices.Add(voice); // Put it last in list
+                }
+            }
+
+            return voice;
         }
 
 

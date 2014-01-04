@@ -47,6 +47,9 @@ namespace Additive101
 #endif
         private const int _numberOfPartials = 20;
 
+        // TODO: An ugly way to keep track of voices.
+        public int KeyNumber { get; set; }
+
         private WaveShapes _shape;
 
         /* http://www.kvraudio.com/forum/printview.php?t=286235&start=15 :
