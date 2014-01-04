@@ -41,7 +41,7 @@ namespace Additive101
     class SynthesizerVoice : WaveProvider32
     {
 #else
-    class SynthesizerVoice
+    class SynthesizerVoice 
     {
         private List<HarmonicPartial> _partials;
 #endif
@@ -49,6 +49,8 @@ namespace Additive101
 
         // TODO: An ugly way to keep track of voices.
         public int KeyNumber { get; set; }
+
+        public MixingSampleProvider MixingSampleProvider { get; private set; }
 
         private WaveShapes _shape;
 
@@ -68,6 +70,8 @@ namespace Additive101
 
         public SynthesizerVoice()
         {
+
+
 #if USE_PURE_DATA_INSTEAD_OF_HOMEBREW
             LibPD.OpenAudio(0, 1, 44100);
             LibPD.OpenPatch(@"C:\Users\hakan.CORP\Desktop\my_additive.pd");
@@ -87,6 +91,7 @@ namespace Additive101
                 _partials.Add(new HarmonicPartial(i + 1, 4000f + 1000f * i, 15000.4f + 5000f * i, 0.2f, 40000.8f + 10000f * i));
             }
 #endif
+            MixingSampleProvider = new MixingSampleProvider(_partials);
 
             Shape = WaveShapes.Square; // TODO: Sine doesn't work...
         }

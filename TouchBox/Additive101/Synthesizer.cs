@@ -31,6 +31,7 @@ namespace Additive101
 
         public Synthesizer()
         {
+            SampleProviders = new List<MixingSampleProvider>();
             _voices = new List<SynthesizerVoice>(_numberOfVoices);
             _activeVoices = new List<SynthesizerVoice>();
             _availableVoices = new List<SynthesizerVoice>();
@@ -39,6 +40,7 @@ namespace Additive101
                 SynthesizerVoice voice = new SynthesizerVoice();
                 _voices.Add(voice);
                 _availableVoices.Add(voice);
+                SampleProviders.Add(voice.MixingSampleProvider);
                 // TODO: In a system with patches, the voices must be initialized as well. For now I hard code the timbre elsewhere.
             }
 
@@ -47,9 +49,12 @@ namespace Additive101
             InitializeNAudio();
         }
 
+        public List<MixingSampleProvider> SampleProviders { get; private set; }
+
         private async void InitializeNAudio()
         {
-            _sampleMixer = new MixingSampleProvider(_voices[0].SampleProviders);
+            // TODO: Make SynthesizerVoice a provider? 
+            _sampleMixer = new MixingSampleProvider(SampleProviders);
             _sampleToWaveProvider = new SampleToWaveProvider(_sampleMixer);
 
             _waveOut = new WasapiOutRT(AudioClientShareMode.Shared, 10);
@@ -79,16 +84,27 @@ namespace Additive101
         {
             float frequency = FrequencyFromMidiNote(keyNote);
             float amplitude = AmplitudeFromMidiVelocity(velocity);
+#if apa
+            int voiceNumberFromKey = keyNote - 36;
+            _voices[voiceNumberFromKey].NoteOn(frequency, amplitude);
+            return;
+#else
             lock (_lock)
             {
                 SynthesizerVoice availableVoice = GetAvailableVoice();
                 availableVoice.NoteOn(frequency, amplitude);
                 availableVoice.KeyNumber = keyNote;
             }
+#endif
         }
 
         public void NoteOff(int keyNote)
         {
+#if apa
+            int voiceNumberFromKey = keyNote - 36;
+            _voices[voiceNumberFromKey].NoteOff();
+            return;
+#else
             lock (_lock)
             {
                 SynthesizerVoice voice = GetActiveVoiceWithKey(keyNote);
@@ -98,6 +114,7 @@ namespace Additive101
                     ReleaseActiveVoice(voice);
                 }
             }
+#endif
         }
 
         private void ReleaseActiveVoice(SynthesizerVoice voice)
