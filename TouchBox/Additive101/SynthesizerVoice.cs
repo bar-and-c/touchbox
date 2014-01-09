@@ -9,10 +9,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
-#if USE_PURE_DATA_INSTEAD_OF_HOMEBREW
-using LibPDBinding;
-#endif
-
 /*
  * TODO: 
  * Would like to add some sort of modulation of partials, of course. In a clever way. 
@@ -37,17 +33,12 @@ namespace Additive101
         Triangle
     };
 
-#if USE_PURE_DATA_INSTEAD_OF_HOMEBREW
-    class SynthesizerVoice : WaveProvider32
-    {
-#else
     class SynthesizerVoice 
     {
         private List<HarmonicPartial> _partials;
-#endif
         private const int _numberOfPartials = 20;
 
-        // TODO: An ugly way to keep track of voices.
+        // TODO: An ugly way to keep track of voices in Synthesizer in order to get "note off". Maybe use key numbers for "base frequency"?
         public int KeyNumber { get; set; }
 
         public MixingSampleProvider MixingSampleProvider { get; private set; }
@@ -72,25 +63,13 @@ namespace Additive101
         {
 
 
-#if USE_PURE_DATA_INSTEAD_OF_HOMEBREW
-            LibPD.OpenAudio(0, 1, 44100);
-            LibPD.OpenPatch(@"C:\Users\hakan.CORP\Desktop\my_additive.pd");
-
-            LibPDPrint del = delegate(string text)
-			{ 
-                Console.WriteLine("PD Print: " + text);
-            };	
-			LibPD.Print += del;
-
-            LibPD.SendMessage("baseampl", "test", new object[] {0.5f});
-#else
             _partials = new List<HarmonicPartial>(_numberOfPartials);
 
             for (int i = 0; i < _numberOfPartials; i++)
             {
                 _partials.Add(new HarmonicPartial(i + 1, 4000f + 1000f * i, 15000.4f + 5000f * i, 0.2f, 40000.8f + 10000f * i));
             }
-#endif
+
             MixingSampleProvider = new MixingSampleProvider(_partials);
 
             Shape = WaveShapes.Square; // TODO: Sine doesn't work...
@@ -109,59 +88,44 @@ namespace Additive101
                     _shape = value;
                     for (int i = 0; i < _numberOfPartials; i++)
                     {
-#if !USE_PURE_DATA_INSTEAD_OF_HOMEBREW
                         _partials[i].RelativeAmplitude = _amplitudeRelations[_shape][i];
-#endif
                     }
                 }
             }
         }
 
-#if !USE_PURE_DATA_INSTEAD_OF_HOMEBREW
         public IEnumerable<ISampleProvider> SampleProviders
         {
             get { return _partials; }
         }
-#endif
 
         internal void NoteOn(float frequency, float initialAmplitude)
         {
-#if !USE_PURE_DATA_INSTEAD_OF_HOMEBREW
             for (int i = 0; i < _numberOfPartials; i++)
             {
                 _partials[i].Frequency = frequency * (i + 1);
-                //Debug.WriteLine("f{0}: {1}", i, _partials[i].Frequency);
                 _partials[i].BaseAmplitude = initialAmplitude;
                 _partials[i].Gate = true;
             }
-            Debug.WriteLine("{0} - Env state: {1}", DateTime.Now.ToString("hh:mm:ss.fff"), _partials[0]._envelopeGenerator.State);
-#endif
         }
 
         internal void NoteOff()
         {
-#if !USE_PURE_DATA_INSTEAD_OF_HOMEBREW
             for (int i = 0; i < _numberOfPartials; i++)
             {
                 _partials[i].Gate = false;
             }
-            Debug.WriteLine("Env state: {0}", _partials[0]._envelopeGenerator.State);
-#endif
         }
 
-#if USE_PURE_DATA_INSTEAD_OF_HOMEBREW
-        public override int Read(float[] buffer, int offset, int sampleCount)
-        {
-            return 0;
-        }
-#endif
 
         internal void Modulate(float pressure)
         {
-            // TODO: Hard to find some decent modulation strategy. For now I just push up those partails that are not in a square. 
+            // TODO: Hard to find some decent modulation strategy. For now I just push up some partails that are not in the current square wave. 
             _partials[1].ModulationAmplitude = pressure;
             _partials[3].ModulationAmplitude = pressure * 2;
             _partials[5].ModulationAmplitude = pressure * 3;
+            _partials[7].ModulationAmplitude = pressure * 2;
+            _partials[13].ModulationAmplitude = pressure;
             /*
             for (int i = 0; i < _numberOfPartials; i++)
             {

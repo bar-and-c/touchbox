@@ -23,11 +23,7 @@ namespace Additive101
         private MixingSampleProvider _sampleMixer;
         private SampleToWaveProvider _sampleToWaveProvider;
 
-#if USE_WAVEOUT // Not possible in Windows Store App
-        private WaveOut _waveOut;
-#else
         private WasapiOutRT _waveOut;
-#endif
 
         public Synthesizer()
         {
@@ -53,12 +49,10 @@ namespace Additive101
 
         private async void InitializeNAudio()
         {
-            // TODO: Make SynthesizerVoice a provider? 
             _sampleMixer = new MixingSampleProvider(SampleProviders);
             _sampleToWaveProvider = new SampleToWaveProvider(_sampleMixer);
 
             _waveOut = new WasapiOutRT(AudioClientShareMode.Shared, 10);
-            //            _waveOut = new WaveOut(WaveCallbackInfo.FunctionCallback());
 
             await _waveOut.Init(_sampleToWaveProvider);
             _waveOut.Play();
@@ -71,40 +65,31 @@ namespace Additive101
 
         float FrequencyFromMidiNote(int note)
         {
-            // http://www.phys.unsw.edu.au/jw/notes.html
+            // See http://www.phys.unsw.edu.au/jw/notes.html
             return (float) Math.Pow(2, (note - 69) / 12.0f) * 440;
         }
 
         float AmplitudeFromMidiVelocity(int velocity)
         {
-            return velocity / 128.0f;
+            // TODO: Lowering the amplitude a bit, in this crude way, as it seems to be a bit close to distortion
+            return velocity / 128.0f / 10;
         }
 
         public void NoteOn(int keyNote, int velocity)
         {
             float frequency = FrequencyFromMidiNote(keyNote);
             float amplitude = AmplitudeFromMidiVelocity(velocity);
-#if apa
-            int voiceNumberFromKey = keyNote - 36;
-            _voices[voiceNumberFromKey].NoteOn(frequency, amplitude);
-            return;
-#else
+
             lock (_lock)
             {
                 SynthesizerVoice availableVoice = GetAvailableVoice();
                 availableVoice.NoteOn(frequency, amplitude);
                 availableVoice.KeyNumber = keyNote;
             }
-#endif
         }
 
         public void NoteOff(int keyNote)
         {
-#if apa
-            int voiceNumberFromKey = keyNote - 36;
-            _voices[voiceNumberFromKey].NoteOff();
-            return;
-#else
             lock (_lock)
             {
                 SynthesizerVoice voice = GetActiveVoiceWithKey(keyNote);
@@ -114,7 +99,6 @@ namespace Additive101
                     ReleaseActiveVoice(voice);
                 }
             }
-#endif
         }
 
         private void ReleaseActiveVoice(SynthesizerVoice voice)

@@ -62,7 +62,7 @@
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0" Grid.Column="0" >
-                <StackPanel >
+                <StackPanel Margin="30">
                     <RadioButton x:Name="_soundSourceSynth" Content="Homemade Additive Synth" Click="_soundSourceSynth_Click" />
                     <RadioButton x:Name="_soundSourceMIDI" Content="MIDI Synth" Click="_soundSourceMIDI_Click" />
                     <StackPanel  x:Name="_midiSynthChoice" Margin="40, 0, 0, 0" >
@@ -167,7 +167,9 @@
                 <Rectangle x:Name="B3" Grid.Row="1" Grid.Column="40" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
                 <Rectangle x:Name="C4" Grid.Row="1" Grid.Column="42" Grid.ColumnSpan="2" Style="{StaticResource PianoWhiteKeyStyle}"/>
             </Grid>
-            <Grid x:Name="DrumGrid" Row="0" Column="2" Margin="2" PointerPressed="DrumGrid_PointerPressed" >
+            
+            <!-- TODO: Keeping drum grid invisible until it works... -->
+            <Grid x:Name="DrumGrid" Row="0" Column="2" Margin="2" PointerPressed="DrumGrid_PointerPressed" Visibility="Collapsed">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
