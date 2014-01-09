@@ -179,7 +179,6 @@ namespace Additive101
 
         internal void Modulate(int midiNote, float pressure)
         {
-            System.Diagnostics.Debug.WriteLine("Synthesizer.Modulate({0})", pressure);
             int numberOfVoices = _voices.Count;
 
             for (int i = 0; i < numberOfVoices; i++)

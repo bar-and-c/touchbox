@@ -60,6 +60,16 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Grid.Column="0" >
+                <StackPanel >
+                    <RadioButton x:Name="_soundSourceSynth" Content="Homemade Additive Synth" Click="_soundSourceSynth_Click" />
+                    <RadioButton x:Name="_soundSourceMIDI" Content="MIDI Synth" Click="_soundSourceMIDI_Click" />
+                    <StackPanel  x:Name="_midiSynthChoice" Margin="40, 0, 0, 0" >
+                    </StackPanel >
+                </StackPanel>
+            </Grid>
+
             <Grid x:Name="KeyboardGrid" Row="1" Column="0" ColumnSpan="3" PointerPressed="KeyboardGrid_PointerPressed" PointerReleased="KeyboardGrid_PointerReleased" PointerExited="KeyboardGrid_PointerReleased" PointerMoved="KeyboardGrid_PointerMoved">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>

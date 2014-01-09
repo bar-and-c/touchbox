@@ -111,6 +111,40 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="NAudio.Midi\ChannelAfterTouchEvent.cs" />
+    <Compile Include="NAudio.Midi\ControlChangeEvent.cs" />
+    <Compile Include="NAudio.Midi\KeySignatureEvent.cs" />
+    <Compile Include="NAudio.Midi\MetaEvent.cs" />
+    <Compile Include="NAudio.Midi\MetaEventType.cs" />
+    <Compile Include="NAudio.Midi\MidiCommandCode.cs" />
+    <Compile Include="NAudio.Midi\MidiController.cs" />
+    <Compile Include="NAudio.Midi\MidiEvent.cs" />
+    <Compile Include="NAudio.Midi\MidiEventCollection.cs" />
+    <Compile Include="NAudio.Midi\MidiEventComparer.cs" />
+    <Compile Include="NAudio.Midi\MidiFile.cs" />
+    <Compile Include="NAudio.Midi\MidiIn.cs" />
+    <Compile Include="NAudio.Midi\MidiInCapabilities.cs" />
+    <Compile Include="NAudio.Midi\MidiInMessageEventArgs.cs" />
+    <Compile Include="NAudio.Midi\MidiInterop.cs" />
+    <Compile Include="NAudio.Midi\MidiMessage.cs" />
+    <Compile Include="NAudio.Midi\MidiOut.cs" />
+    <Compile Include="NAudio.Midi\MidiOutCapabilities.cs" />
+    <Compile Include="NAudio.Midi\MidiOutTechnology.cs" />
+    <Compile Include="NAudio.Midi\NoteEvent.cs" />
+    <Compile Include="NAudio.Midi\NoteOnEvent.cs" />
+    <Compile Include="NAudio.Midi\PatchChangeEvent.cs" />
+    <Compile Include="NAudio.Midi\PitchWheelChangeEvent.cs" />
+    <Compile Include="NAudio.Midi\SequencerSpecificEvent.cs" />
+    <Compile Include="NAudio.Midi\SmpteOffsetEvent.cs" />
+    <Compile Include="NAudio.Midi\SysexEvent.cs" />
+    <Compile Include="NAudio.Midi\TempoEvent.cs" />
+    <Compile Include="NAudio.Midi\TextEvent.cs" />
+    <Compile Include="NAudio.Midi\TimeSignatureEvent.cs" />
+    <Compile Include="NAudio.Midi\TrackSequenceNumberEvent.cs" />
+    <Compile Include="NAudio.Misc\Manufacturers.cs" />
+    <Compile Include="NAudio.Misc\MergeSort.cs" />
+    <Compile Include="NAudio.Misc\MmException.cs" />
+    <Compile Include="NAudio.Misc\MmResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
