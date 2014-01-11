@@ -17,18 +17,24 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
+
+/* TODO: 
+ * - There is a problem with hanging notes; if you press a key and let your finger slide out of the key area the 
+ * PointerExited event handler is called, but at that point there's no Name property to determine the key, so no 
+ * "note off" method is called. 
+ * 
+ * - I think there are cases where some "all notes off" should be called, e.g. if the sound generation is changed 
+ * while pressing a key. 
+ */
 
 namespace TouchBox
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
+
     public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
         Synthesizer _synth;
-        private MidiOut[] _midiOutputs;
-        int _selectedMidiDevice = 0;
+        string _selectedMidiDevice;
+        private Dictionary<string, MidiOut> _midiDevices;
 
         // For now, only use MIDI channel 1
         int _midiChannel = 1;
@@ -80,7 +86,7 @@ namespace TouchBox
 
             MidiSetup();
 
-            // TODO: Trying to open/close synth when opening/closing app, but I fear this is the wrong way in Windows 8 Runtime
+            // TODO: Trying to open/close synth when opening/closing app, but I fear this is the wrong way in Windows 8 (Store app)
             Loaded += MainPage_Loaded;
             Unloaded += MainPage_Unloaded;
 
@@ -99,6 +105,24 @@ namespace TouchBox
         {
             _synth.Close();
         }
+
+
+        private void _soundSourceSynth_Click(object sender, RoutedEventArgs e)
+        {
+            UseMidiSynth = false;
+        }
+
+        private void _soundSourceMIDI_Click(object sender, RoutedEventArgs e)
+        {
+            UseMidiSynth = true;
+        }
+
+        void RadiobuttonChecked(object sender, RoutedEventArgs e)
+        {
+            RadioButton r = (RadioButton)sender;
+            _selectedMidiDevice = (string)r.Content;
+        }
+
 
         private void KeyboardGrid_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
@@ -224,53 +248,62 @@ namespace TouchBox
         void MidiSetup()
         {
             int numDevices = MidiOut.NumberOfDevices;
-            _midiOutputs = new MidiOut[numDevices];
+            _midiDevices = new Dictionary<string, MidiOut>();
+
             for (int device = 0; device < numDevices; device++)
             {
                 // Keep track of devices
-                _midiOutputs[device] = new MidiOut(device);
+                string deviceName = MidiOut.DeviceInfo(device).ProductName;
+                _midiDevices[deviceName] = new MidiOut(device);
+                if (device == 0)
+                {
+                    _selectedMidiDevice = deviceName;
+                }
 
                 // Add radiobutton for multiple MIDI devices (if any)
+                /* TODO: This implementation is not tested, I haven't been able to detect another MIDI device in this 
+                 * Windows Store app (similar code detected third party MIDI synth SW and loopback device in a Desktop app). */
                 Binding b = new Binding();
                 b.Path = new PropertyPath("UseMidiSynth");
                 b.Source = this;
                 RadioButton r = new RadioButton()
                 {
-                    Content = MidiOut.DeviceInfo(device).ProductName,
+                    Content = deviceName,
                     IsChecked = (device == 0),
                 };
+                r.Checked += RadiobuttonChecked;
                 r.SetBinding(IsEnabledProperty, b);
                 _midiSynthChoice.Children.Add(r);
 
-                // For now, set all up for synth string sound (according to General MIDI)
-                _midiOutputs[device].Send(MidiMessage.ChangePatch(51, _midiChannel).RawData);
+                // For now, set all up for synth string sound (patch 51, according to General MIDI)
+                _midiDevices[deviceName].Send(MidiMessage.ChangePatch(51, _midiChannel).RawData);
 
             }
         }
 
         private void MidiNoteOff(int midiNote, int midiChannel)
         {
-            _midiOutputs[_selectedMidiDevice].Send(MidiMessage.StopNote(midiNote, 100, midiChannel).RawData);
+            _midiDevices[_selectedMidiDevice].Send(MidiMessage.StopNote(midiNote, 100, midiChannel).RawData);
         }
 
         private void MidiKeyAftertouch(int midiNote, int midiChannel, int amount)
         {
-            _midiOutputs[_selectedMidiDevice].Send(KeyAftertouch(amount, midiNote, midiChannel).RawData);
+            _midiDevices[_selectedMidiDevice].Send(KeyAftertouch(amount, midiNote, midiChannel).RawData);
         }
 
         private void MidiChannelAftertouch(int midiChannel, int amount)
         {
-            _midiOutputs[_selectedMidiDevice].Send(ChannelAftertouch(amount, midiChannel).RawData);
+            _midiDevices[_selectedMidiDevice].Send(ChannelAftertouch(amount, midiChannel).RawData);
         }
 
         private void MidiModulation(int midiChannel, int amount)
         {
-            _midiOutputs[_selectedMidiDevice].Send(MidiMessage.ChangeControl((int)MidiController.Modulation, amount, midiChannel).RawData);
+            _midiDevices[_selectedMidiDevice].Send(MidiMessage.ChangeControl((int)MidiController.Modulation, amount, midiChannel).RawData);
         }
 
         private void MidiNoteOn(int midiNote, int midiChannel, int midiVelocity)
         {
-            _midiOutputs[_selectedMidiDevice].Send(MidiMessage.StartNote(midiNote, midiVelocity, midiChannel).RawData);
+            _midiDevices[_selectedMidiDevice].Send(MidiMessage.StartNote(midiNote, midiVelocity, midiChannel).RawData);
         }
 
 
@@ -295,16 +328,5 @@ namespace TouchBox
         #endregion
 
 
-        private void _soundSourceSynth_Click(object sender, RoutedEventArgs e)
-        {
-            UseMidiSynth = false;
-
-        }
-
-        private void _soundSourceMIDI_Click(object sender, RoutedEventArgs e)
-        {
-            UseMidiSynth = true;
-
-        }
     }
 }
