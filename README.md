@@ -27,3 +27,7 @@ The idea to make somthing music based came early in the discussions, but after w
 So, I decided to scrap it. 
 But, some of the sound work ended up in the other demo I did for the same company, a game-like app with no real purpose: Bubbles. No real purpose, but I still think it works better as a demo in this context. 
 
+## Video
+[Exclusive video footage of the demo.](https://youtu.be/Al08G2LbwVo)
+
+The first sound is the internal sound source. The second sound is the homebrew additive synthesis. 
