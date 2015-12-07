@@ -3,11 +3,14 @@ Touchbox
 
 ## Overview
 
-This is a prototype of a music app for Windows 8, the purpose of which was to function as a demo app for a pressure sensitive touch screen. For a couple of reasons I never finished the app. The code that is in this repo (mostly) works, it's just not very interesting. :-) 
+This is a prototype of a music app for Windows 8.1, the purpose of which was to function as a demo app for a pressure sensitive touch screen. For a couple of reasons I never finished the app. The code that is in this repo (mostly) works, it's just not very interesting. :-) 
+
 
 ### Reason number one (for ditching the app)
 
 Sound problems. I had never really worked with “serious” sound programming before, and with C#/.NET as the platform of choice - well, at least for me I sensed a lack of good audio code to build on there. 
+
+<img align="right" src="doc/keys.png" style="width: 25%; height: 25%">
 
 My first attempt was to just send MIDI to the internal sound source, but that turned out to have a latency that rendered it almost useless. 
 
